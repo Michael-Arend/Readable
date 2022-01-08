@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import {
+  useFetchAllCategories,
+  useFetchAllPosts,
+} from "./Store/ActionCreators";
+import { useDispatch } from "react-redux";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home";
+import PostDetail from "./Pages/PostDetail";
+import Categories from "./Pages/Categories";
 
 function App() {
+  const dispatch = useDispatch();
+  const fetchPosts = useFetchAllPosts();
+  const fetchCategories = useFetchAllCategories();
+
+  useEffect(() => {
+    dispatch(fetchPosts);
+    dispatch(fetchCategories);
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/new" element={""} />
+          <Route path="/:category" element={<Categories />} />
+          <Route path="/:category/:post_id" element={<PostDetail />} />
+        </Routes>
+      }
     </div>
   );
 }
