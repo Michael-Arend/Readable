@@ -7,7 +7,8 @@ export interface IPost {
   category: string;
   voteScore: number;
   deleted: boolean;
-  comments: Comment[];
+  comments: IComment[];
+  commentCount: number;
 }
 
 export interface IComment {

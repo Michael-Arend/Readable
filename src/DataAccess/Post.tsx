@@ -1,56 +1,77 @@
-import { IPost } from "../Interfaces";
-import { ReadableApi } from "./ApiConfig";
-import { appStateActions } from "../Store/AppStateReducer";
+import { IComment, IPost } from "../Interfaces";
+import { ReadableApi, TransferData } from "./ApiConfig";
 import { CommentObjInArray } from "../Helper/Converter";
-import { resourceLimits } from "worker_threads";
-
 const baseUrl = ReadableApi.baseUrl;
-const headers = ReadableApi.headers;
 
-export const useFetchPosts = (): (() => Promise<IPost[]>) => {
-  return async (): Promise<IPost[]> => {
-    appStateActions.setLoading(true);
-    appStateActions.setError("");
-    const endpoint = ReadableApi.endpoints.getAllPosts;
-    const result = await fetch(baseUrl + endpoint, headers)
-      .then((result) => result.json())
-      .catch((e) => appStateActions.setError(e));
-    appStateActions.setLoading(false);
-    return result;
-  };
-};
+const GET = "GET";
+const POST = "POST";
+const PUT = "PUT";
+const DELETE = "DELETE";
+
+export const useFetchPosts =
+  (): (() => Promise<IPost[]>) => async (): Promise<IPost[]> =>
+    TransferData(baseUrl + "posts", GET);
 
 export const useFetchOnePost = (id: string): (() => Promise<IPost>) => {
   return async (): Promise<IPost> => {
-    appStateActions.setLoading(true);
-    appStateActions.setError("");
-    const endpoint = ReadableApi.endpoints.getAllPosts;
-    const result = await fetch(baseUrl + endpoint + id, headers)
-      .then((result) => result.json())
-      .catch((e) => appStateActions.setError(e));
-
-    const rawComments = await fetch(
-      baseUrl + endpoint + id + "/comments",
-      headers
-    )
-      .then((result) => result.json())
-      .catch((e) => appStateActions.setError(e));
+    const result = await TransferData(baseUrl + "posts/" + id, GET);
+    const rawComments = await TransferData(
+      baseUrl + "posts/" + id + "/comments",
+      GET
+    );
     result.comments = CommentObjInArray(rawComments);
-    appStateActions.setLoading(false);
     return result;
   };
 };
 
-export const useFetchPostsByCategory = (
-  name: string
-): (() => Promise<IPost[]>) => {
-  return async (): Promise<IPost[]> => {
-    appStateActions.setLoading(true);
-    appStateActions.setError("");
-    const result = await await fetch(baseUrl + name + "/posts", headers)
-      .then((result) => result.json())
-      .catch((e) => appStateActions.setError(e));
-    appStateActions.setLoading(false);
-    return result;
-  };
+export const useFetchPostsByCategory =
+  (name: string): (() => Promise<IPost[]>) =>
+  async (): Promise<IPost[]> =>
+    TransferData(baseUrl + name + "/posts", GET);
+
+export const PostNewPost =
+  (post: IPost): (() => Promise<boolean>) =>
+  async (): Promise<boolean> =>
+    TransferData(baseUrl + "posts", POST, JSON.stringify(post));
+
+export const UpdateVoteForPost =
+  (post: IPost, direction: number) => async (): Promise<IPost[]> =>
+    TransferData(
+      baseUrl + "posts/" + post.id,
+      POST,
+      JSON.stringify({ option: direction > 0 ? "upVote" : "downVote" })
+    );
+
+export const DeletePost = (post: IPost): (() => Promise<IPost>) => {
+  return TransferData(baseUrl + "posts/" + post.id, DELETE);
 };
+
+export const DeleteComment = (comment: IComment) =>
+  TransferData(baseUrl + "comments/" + comment.id, DELETE);
+
+export const PostComment =
+  (comment: IComment): (() => Promise<IComment>) =>
+  async (): Promise<IComment> =>
+    TransferData(baseUrl + "comments", POST, JSON.stringify(comment));
+
+export const UpdateVoteForComment =
+  (comment: IComment, direction: number) => async (): Promise<IPost[]> =>
+    TransferData(
+      baseUrl + "comments/" + comment.id,
+      POST,
+      JSON.stringify({ option: direction > 0 ? "upVote" : "downVote" })
+    );
+
+export const EditComment = (comment: IComment) =>
+  TransferData(
+    baseUrl + "comments/" + comment.id,
+    PUT,
+    JSON.stringify({ body: comment.body })
+  );
+
+export const EditPost = async (post: IPost) =>
+  TransferData(
+    baseUrl + "posts/" + post.id,
+    PUT,
+    JSON.stringify({ title: post.title, body: post.body })
+  );

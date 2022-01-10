@@ -1,13 +1,262 @@
+:root {
+  --dark-color: #01151d;
+  --medium-color: #182731;
+  --light-color: #28343e;
+  --light-blue-color: #4f576a;
+  color: #ddd;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+p {
+  font-size: 0.9rem;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dark-color);
+}
+
+.main-wrapper {
+  display: flex;
+  margin-top: 50px;
+}
+
+.left-wrapper {
+  flex: 1 1 30%;
+}
+.center-wrapper {
+  flex: 1 1 40%;
+  max-width: 1000px;
+}
+
+.right-wrapper {
+  flex: 1 1 30%;
+}
+
+.center-wrapper > select {
+  position: relative;
+  left: 100%;
+  transform: translateX(-100%);
+  margin-top: 50px;
+}
+
+.postcard-container {
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+  display: grid;
+}
+.postcard-wrapper {
+  background-color: var(--medium-color);
+  border-radius: 1rem;
+  padding: 20px 50px;
+  margin: 10px 0;
+  display: grid;
+  grid-template-rows: 30px 20px 30px auto 50px;
+}
+
+.comment-wrapper {
+  grid-template-rows: 30px 20px auto 50px;
+  background-color: transparent;
+  border: 1px solid var(--light-color);
+}
+
+.postcard-menu-wrapper {
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+}
+
+.postcard-menu-wrapper > p {
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.postcard-dropdown {
+  background: var(--light-color);
+  display: none;
+  position: absolute;
+  width: 70px;
+  border-radius: 5px;
+  margin-top: -20px;
+  right: 0px;
+  padding: 5px;
+}
+
+.postcard-dropdown p {
+  margin: 2px;
+}
+
+.postcard-menu-wrapper:hover .postcard-dropdown {
+  display: block;
+}
+.new-post-wrapper {
+  grid-template-rows: 15px 30px auto 35px 60px;
+  gap: 10px;
+}
+
+.new-comment-wrapper {
+  grid-template-rows: 40px auto 60px;
+}
+
+.new-post-wrapper input,
+textarea {
+  background: var(--light-color);
+  border: none;
+  border-radius: 10px;
+
+  padding: 10px 20px;
+  color: white;
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  resize: none;
+}
+
+.edit-close-button {
+  right: 19px;
+  background: transparent;
+  border: 0;
+  font-size: 1.2rem;
+  position: absolute;
+  color: white;
+  margin-top: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+select {
+  background: var(--light-color);
+  border: none;
+  color: #ddd;
+  border-radius: 10px;
+
+  padding: 5px 20px;
+  font-size: 1rem;
+}
+
+.light-button {
+  border: 2px solid var(--light-color);
+  background-color: transparent;
+  flex: 1 1 150px;
+  padding: 5px;
+  border-radius: 40px;
+  color: #ddd;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.postcard-author-wrapper {
+  display: flex;
+}
+
+.postcard-wrapper h5 {
+  margin: 5px 0 0 0;
+}
+.postcard-wrapper h3 {
+  margin: 0;
+}
+
+.postcard-body {
+  margin-top: 0.3rem;
+}
+
+.postcard-category {
+  align-self: center;
+  color: var(--light-blue-color);
+  margin: 0 0 0 10px;
+}
+.postcard-time {
+  margin: 0;
+  color: var(--light-blue-color);
+  font-size: 0.7rem;
+}
+
+.postcard-button-wrapper {
+  display: flex;
+  gap: 2rem;
+}
+.postcard-votes-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.postcard-votes-wrapper p {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--light-blue-color);
+}
+
+.postcard-votes {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+}
+.postcard-votes span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--light-blue-color);
+}
+
+.postcard-button {
+  background-color: var(--light-color);
+  flex: 1 1 150px;
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.postcard-button img,
+.light-button img {
+  margin-right: 6px;
+  margin-bottom: -1px;
+}
+
+.new-post-wrapper h5 {
+  margin: 0 0 5px 5px;
+  color: var(--light-blue-color);
+}
+
+.category-box-wrapper {
+  display: grid;
+  background: var(--medium-color);
+  border-radius: 1rem;
+  width: 80%;
+  margin: 10px 20px;
+
+  position: relative;
+}
+
+.category-content-wrapper {
+  margin: 30px 0 30px 30px;
+  min-height: 30vh;
+}
+
+.category-box-header {
+  background-image: url("../public/lps.jpeg");
+  border-radius: 1rem 1rem 0 0;
+  padding: 30px 10px;
+  height: 65px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #2e8ab4;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }

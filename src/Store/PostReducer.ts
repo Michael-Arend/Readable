@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { idText } from "typescript";
-import { ICategory, IPost } from "../Interfaces";
+import { ICategory, IPost, IComment } from "../Interfaces";
 
 type PostState = {
   posts: IPost[];
   categories: ICategory[];
+  comments: IComment[];
 };
 
-const initialState: PostState = { posts: [], categories: [] };
+const initialState: PostState = { posts: [], categories: [], comments: [] };
 
 const postSlice = createSlice({
   name: "posts",
@@ -23,7 +23,7 @@ const postSlice = createSlice({
     },
 
     setCategories(state, action) {
-      state.categories = action.payload;
+      state.categories = action.payload.categories;
     },
 
     setPost(state, action) {
@@ -31,6 +31,57 @@ const postSlice = createSlice({
         ...state.posts.filter((p) => p.id !== action.payload.id),
         action.payload,
       ];
+    },
+
+    votePost(state, action) {
+      state.posts = [
+        ...state.posts.filter((p) => p.id !== action.payload.post.id),
+        {
+          ...action.payload.post,
+          voteScore:
+            action.payload.direction > 0
+              ? action.payload.post.voteScore + 1
+              : action.payload.post.voteScore - 1,
+        },
+      ];
+    },
+
+    deletePost(state, action) {
+      state.posts = [...state.posts.filter((p) => p.id !== action.payload.id)];
+    },
+
+    deleteComment(state, action) {
+      const post = state.posts.find(
+        (x: IPost) => x.id === action.payload.parentId
+      );
+
+      if (post === undefined) return;
+      post.commentCount--;
+      post.comments = post.comments.filter(
+        (x: IComment) => x.id !== action.payload.id
+      );
+    },
+
+    setComment(state, action) {
+      const post = state.posts.find(
+        (x: IPost) => x.id === action.payload.parentId
+      );
+      if (post === undefined) return;
+      post.comments = post.comments.filter(
+        (x: IComment) => x.id !== action.payload.id
+      );
+      post.comments.push(action.payload);
+      post.commentCount = post.comments.length;
+    },
+
+    voteComment(state, action) {
+      const comment = state.posts
+        .find((x: IPost) => x.id === action.payload.comment.parentId)
+        ?.comments.find((x: IComment) => x.id === action.payload.comment.id);
+      if (comment !== undefined)
+        action.payload.direction > 0
+          ? comment.voteScore++
+          : comment.voteScore--;
     },
   },
 });

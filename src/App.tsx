@@ -8,7 +8,8 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import PostDetail from "./Pages/PostDetail";
-import Categories from "./Pages/Categories";
+import NewPost from "./Components/NewPost";
+import NotFound from "./Components/NotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,16 +19,17 @@ function App() {
   useEffect(() => {
     dispatch(fetchPosts);
     dispatch(fetchCategories);
-  }, [dispatch]);
+  }, [dispatch, fetchCategories, fetchPosts]);
 
   return (
     <div>
       {
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/new" element={""} />
-          <Route path="/:category" element={<Categories />} />
+          <Route path="/new" element={<NewPost />} />
+          <Route path="/:category" element={<Home />} />
           <Route path="/:category/:post_id" element={<PostDetail />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       }
     </div>
